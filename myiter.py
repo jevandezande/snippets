@@ -19,7 +19,7 @@ class MyIter(mit.peekable):
         isempty()
     """
 
-    def __init__(self, iterable: Iterable[str], position: int = -1):
+    def __init__(self, iterable: Iterable[str], position: int = -1) -> None:
         super().__init__(iterable)
         self._position = position
         self._current_line = ""
@@ -34,7 +34,7 @@ class MyIter(mit.peekable):
         Jump forward the specified number of elements in the iterator
         :return: the line n-steps forward
         """
-        if num > 0:
+        if num < 0:
             raise IndexError("Cannot jump backwards yet")
 
         for _ in itertools.islice(self, num - 1):
@@ -57,7 +57,7 @@ class MyIter(mit.peekable):
 
 
 if __name__ == "__main__":
-    """ Simple sanity tests """
+    """Simple sanity tests"""
     mi = MyIter(open("myiter.py"))
     peeked = mi.peek()
     for line in mi:

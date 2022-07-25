@@ -16,7 +16,10 @@ from rdkit.SimDivFilters.rdSimDivPickers import MaxMinPicker
 
 ATOMIC_NUMBERS = ('X', 'H', 'He', 'Li', 'Be', 'B', 'C', 'N', 'O', 'F', 'Ne', 'Na', 'Mg', 'Al', 'Si', 'P', 'S', 'Cl', 'Ar', 'K', 'Ca', 'Sc', 'Ti', 'V', 'Cr', 'Mn', 'Fe', 'Co', 'Ni', 'Cu', 'Zn', 'Ga', 'Ge', 'As', 'Se', 'Br', 'Kr', 'Rb', 'Sr', 'Y', 'Zr', 'Nb', 'Mo', 'Tc', 'Ru', 'Rh', 'Pd', 'Ag', 'Cd', 'In', 'Sn', 'Sb', 'Te', 'I', 'Xe', 'Cs', 'Ba', 'La', 'Ce', 'Pr', 'Nd', 'Pm', 'Sm', 'Eu', 'Gd', 'Tb', 'Dy', 'Ho', 'Er', 'Tm', 'Yb', 'Lu', 'Hf', 'Ta', 'W', 'Re', 'Os', 'Ir', 'Pt', 'Au', 'Hg', 'Tl', 'Pb', 'Bi', 'Po', 'At', 'Rn', 'Fr', 'Ra', 'Ac', 'Th', 'Pa', 'U', 'Np', 'Pu', 'Am', 'Cm', 'Bk', 'Cf', 'Es', 'Fm', 'Md', 'No', 'Lr', 'Rf', 'Db', 'Sg', 'Bh', 'Hs', 'Mt', 'Ds', 'Rg', 'Cn', 'Nh', 'Fl', 'Mc', 'Lv', 'Ts', 'Og')
 
-ions = [ATOMIC_NUMBERS[i] for i in chain([3, 4, 11, 12], range(19, 32), range(37, 51), range(55, 85), range(87, 118))]
+ions = [
+    ATOMIC_NUMBERS[i]
+    for i in chain([3, 4, 11, 12], range(19, 32), range(37, 51), range(55, 85), range(87, 118))
+]
 
 
 def remove_charges(smiles):
@@ -26,7 +29,7 @@ def remove_charges(smiles):
     :param smiles: the SMILES string
     :return: a new SMILES string
     """
-    return re.sub('\[([^]]+)[+-]\]', '[\g<1>]', smiles)
+    return re.sub(r"\[([^]]+)[+-]\]", r"[\g<1>]", smiles)
 
 
 def remove_ions(smiles):
@@ -37,13 +40,14 @@ def remove_ions(smiles):
     :return: a new SMILES string
     """
     new_smiles = []
-    for chunk in smiles.split('.'):
+    for chunk in smiles.split("."):
         for ion in ions:
             if ion in chunk:
                 break
         else:
             new_smiles.append(chunk)
-    return '.'.join(new_smiles)
+    return ".".join(new_smiles)
+
 
 def conjugated_subgraphs(mol):
     """
@@ -56,7 +60,11 @@ def conjugated_subgraphs(mol):
     :yield: conjugated sets of atoms
     """
     G = nx.Graph()
-    edges = ((bond.GetBeginAtomIdx(), bond.GetEndAtomIdx()) for bond in mol.GetBonds() if bond.GetIsConjugated())
+    edges = (
+        (bond.GetBeginAtomIdx(), bond.GetEndAtomIdx())
+        for bond in mol.GetBonds()
+        if bond.GetIsConjugated()
+    )
     G.add_edges_from(edges)
     yield from nx.connected_components(G)
 
@@ -159,9 +167,9 @@ def make_geometry(mol, confId, atomicNum=False):
         symbols = [ATOMIC_NUMBERS[num] for num in nums]
     else:
         symbols = nums
-    mol_str = ''
+    mol_str = ""
     for num, (x, y, z) in zip(symbols, mol.GetConformer(confId).GetPositions()):
-        mol_str += f'{num:<2} {x} {y} {z}\n'
+        mol_str += f"{num:<2} {x} {y} {z}\n"
     return mol_str.strip()
 
 
@@ -180,7 +188,7 @@ def make_psi4_geometry(geom, confId=None):
     return psi4.geometry(geom)
 
 
-def energy(geom, confId, method='HF-3C', **kwargs):
+def energy(geom, confId, method="HF-3C", **kwargs):
     """
     Finds the energy of a given molecule
 
@@ -203,7 +211,7 @@ def energy(geom, confId, method='HF-3C', **kwargs):
     return np.nan
 
 
-def homo_lumo(geom, confId=None, method='HF-3C', **kwargs):
+def homo_lumo(geom, confId=None, method="HF-3C", **kwargs):
     """
     Finds the HOMO and LUMO of a given molecule
 
@@ -215,14 +223,14 @@ def homo_lumo(geom, confId=None, method='HF-3C', **kwargs):
     wfn = energy(geom, confId, method, **kwargs)
     if wfn:
         try:
-            orbs = wfn.epsilon_a_subset('AO', 'ALL').np
+            orbs = wfn.epsilon_a_subset("AO", "ALL").np
             return wfn, orbs[wfn.nalpha() - 1], orbs[wfn.nalpha()]
-        except:
+        except Exception:
             pass
     return np.nan, np.nan, np.nan
 
 
-def optimize(geom, confId=None, method='HF-3C', **kwargs):
+def optimize(geom, confId=None, method="HF-3C", **kwargs):
     """
     Optimizes the given conformation.
 
@@ -239,7 +247,7 @@ def optimize(geom, confId=None, method='HF-3C', **kwargs):
         psi4.core.set_global_option("MAXITER", 1000)
 
         return psi4.optimize(method, return_wfn=True, **kwargs)[1]
-    except Exception as e:
+    except Exception:
         pass
 
     return np.nan
@@ -255,9 +263,9 @@ def show_3D_mol(mol, confId):
     mb = Chem.MolToMolBlock(mol, confId=confId)
 
     p = py3Dmol.view()
-    p.addModel(mb,'sdf')
-    p.setStyle({'stick':{}})
-    p.setBackgroundColor('0xeeeeee')
+    p.addModel(mb, "sdf")
+    p.setStyle({"stick": {}})
+    p.setBackgroundColor("0xeeeeee")
     p.zoomTo()
     p.show()
 
@@ -272,34 +280,40 @@ def gasteiger_charges(mol):
     :return: charges, plot of charges
     """
     AllChem.ComputeGasteigerCharges(mol)
-    return [mol.GetAtomWithIdx(i).GetDoubleProp('_GasteigerCharge') for i in range(mol.GetNumAtoms())]
+    return [
+        mol.GetAtomWithIdx(i).GetDoubleProp("_GasteigerCharge") for i in range(mol.GetNumAtoms())
+    ]
 
 
-def plot_vals(mol, vals, colorMap='jet', contourLines=10):
+def plot_vals(mol, vals, colorMap="jet", contourLines=10):
     """
     Plot values on a SimilarityMap
 
     :param mol: an RDKit.mol
     :return: SimilarityMap
     """
-    return SimilarityMaps.GetSimilarityMapFromWeights(mol, vals, colorMap=colorMap, contourLines=contourLines)
+    return SimilarityMaps.GetSimilarityMapFromWeights(
+        mol, vals, colorMap=colorMap, contourLines=contourLines
+    )
 
 
 def get_mo_view(mol, wfn):
     gridspace = 0
     homo_idx = wfn.nalpha()
     lumo_idx = homo_idx + 1
-    self.psi4.set_options({
-        "cubeprop_tasks": ['ESP', 'FRONTIER_ORBITALS', 'Density', 'DUAL_DESCRIPTOR'],
-        "cubic_grid_spacing": [gridspace, gridspace, gridspace],
-        "cubeprop_filepath": self.tempdir
-    })
+    self.psi4.set_options(
+        {
+            "cubeprop_tasks": ["ESP", "FRONTIER_ORBITALS", "Density", "DUAL_DESCRIPTOR"],
+            "cubic_grid_spacing": [gridspace, gridspace, gridspace],
+            "cubeprop_filepath": self.tempdir,
+        }
+    )
 
-    Chem.MolToMolFile(mol, 'target.mol')
+    Chem.MolToMolFile(mol, "target.mol")
     psi4.cubeprop(wfn)
 
 
-def tddft(geom, confId=None, method='B3LYP', basis='def2-svp', nstates=5):
+def tddft(geom, confId=None, method="B3LYP", basis="def2-svp", nstates=5):
     """
     Run TD-DFT with pyscf
 
@@ -314,9 +328,9 @@ def tddft(geom, confId=None, method='B3LYP', basis='def2-svp', nstates=5):
         geom = make_geometry(geom, confId)
 
     mol = pyscf.M(
-        atom = geom,
-        basis = basis,
-        symmetry = True,
+        atom=geom,
+        basis=basis,
+        symmetry=True,
     )
 
     mf = mol.RKS()
@@ -330,7 +344,11 @@ def tddft(geom, confId=None, method='B3LYP', basis='def2-svp', nstates=5):
 
 
 def largest_chromophore(mol):
-    edges = [(bond.GetBeginAtomIdx(), bond.GetEndAtomIdx()) for bond in mol.GetBonds() if bond.GetIsConjugated()]
+    edges = [
+        (bond.GetBeginAtomIdx(), bond.GetEndAtomIdx())
+        for bond in mol.GetBonds()
+        if bond.GetIsConjugated()
+    ]
 
     G = nx.Graph()
     G.add_edges_from(edges)
@@ -339,7 +357,7 @@ def largest_chromophore(mol):
     if not connectivity:
         return np.nan
 
-    largest = connectivity[np.argmax(map(len, connectivity))]
+    return connectivity[np.argmax(map(len, connectivity))]
 
 
 def pick_subset(mols, num=5, radius=3, seed=-1):

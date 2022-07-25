@@ -6,14 +6,14 @@ import numpy as np
 
 
 def read(file):
-    while next(file) != 'PARAMETERS RELEVANT TO MOLECULAR STRUCTURE':
+    while next(file) != "PARAMETERS RELEVANT TO MOLECULAR STRUCTURE":
         continue
 
     file.jump(5)
     line = next(file)
     values = []
-    while line != 'AAA FCUBIC --------------------':
-        if line != 'AAA FCUBIC bef trafo --------------------':
+    while line != "AAA FCUBIC --------------------":
+        if line != "AAA FCUBIC bef trafo --------------------":
             _, num, _, value = line.split()
         line = next(file)
 
@@ -22,9 +22,13 @@ def read(file):
   fcubic:   0.000000000000000E+000
 """
     line = next(file)
-    while line != 'Special treatment for modes:':
+    while line != "Special treatment for modes:":
         _, i, _, j, _, k = line.split()
-        i, j, k, = int(i), int(j), int(float(k))
+        i, j, k, = (
+            int(i),
+            int(j),
+            int(float(k)),
+        )
         fcubic = float(next(file).split()[-1])
         line = next(file)
 
@@ -64,7 +68,7 @@ def read(file):
     file.jump(3)
     temperature = float(next(file).split()[-2])
     file.jump(3)
-    while file.peek().split()[0] == 'AAA':
+    while file.peek().split()[0] == "AAA":
         _, _, _, _, mode, _, t_prefact = next(file).split()
         _, _, conv_factor, _, omega, _ = next(file).split()
         q2avg = float(next(file))
@@ -72,18 +76,17 @@ def read(file):
         _, a, b, c = next(file).split()
         tmp2_icoord = next(file).split()[-1]
 
-#    """
-# J J I                     7                     7                     7  cubic
-# -4.014716146043627E-012  factor   1.796194958187608E-002
-# J J I                     1                     1                     7  cubic
-# -9.238060067674107E-003  factor   0.000000000000000E+000
-#"""
-#    while file.peek() != 'AAA':
-#        _, _, _, i, j, k, _ = next(file).split()
-#        cubic, _, factor = next(file).split()
+    #    """
+    # J J I                     7                     7                     7  cubic
+    # -4.014716146043627E-012  factor   1.796194958187608E-002
+    # J J I                     1                     1                     7  cubic
+    # -9.238060067674107E-003  factor   0.000000000000000E+000
+    # """
+    #    while file.peek() != 'AAA':
+    #        _, _, _, i, j, k, _ = next(file).split()
+    #        cubic, _, factor = next(file).split()
 
-
-    while next(file) != 'C A L C U L A T I O N  OF  V I B R A T I O N A L L Y':
+    while next(file) != "C A L C U L A T I O N  OF  V I B R A T I O N A L L Y":
         continue
     file.jump(3)
 
@@ -133,7 +136,7 @@ def read(file):
     Eigenvalues of vibr. averaged tensor (ppm):   234.975   234.975   234.975
 """
     results = []
-    while file.peek()[:11] == 'Atom number':
+    while file.peek()[:11] == "Atom number":
         atom_number = next(file).split()[-1]
         file.jump(2)
         nuse = int(next(file).split()[-1])
@@ -154,17 +157,19 @@ def read(file):
         isotropic_shielding = float(next(file).split()[-1])
         anisotropic_shielding = float(next(file).split()[-1])
         x, y, z = map(float, next(file).split()[-3:])
-        results.append([atom_number, derivs, ref_geom_shielding_tensor, vib_correct_shielding_tensor])
+        results.append(
+            [atom_number, derivs, ref_geom_shielding_tensor, vib_correct_shielding_tensor]
+        )
         next(file)
 
-    #for atom, derivs, ref, vib in results:
+    # for atom, derivs, ref, vib in results:
     #    print(f"Atom #{atom}")
     #    print(derivs)
     #    print(ref)
     #    print(vib)
     #    print()
 
-    while next(file) != 'ATOM              INTERNUCLEAR DISTANCE / Angstrom':
+    while next(file) != "ATOM              INTERNUCLEAR DISTANCE / Angstrom":
         continue
 
     """
@@ -177,7 +182,7 @@ def read(file):
   3    1         1.0830104    1.0984020    1.0921827
 """
     line = file.jump(4)
-    while line[:10] != '-'*10:
+    while line[:10] != "-" * 10:
         i, j, re, rg, ra = line.split()
         line = next(file)
 
@@ -196,7 +201,7 @@ def read(file):
        1           8       0.1849831      0.0000000   -0.0141547    0.1708284
        """
     line = file.jump(11)
-    while line[:10] != '-'*10:
+    while line[:10] != "-" * 10:
         axis, mode, coriolis, quadratic, anharmonic, total = line.split()
         line = next(file)
 
@@ -210,7 +215,7 @@ def read(file):
     B0                    5.29993647           5.29993647           5.29993647
     """
     line = file.jump(8)
-    while line[:10] != '-'*10:
+    while line[:10] != "-" * 10:
         vibration, x, y, z = line.split()
         line = next(file)
 
@@ -223,7 +228,7 @@ def read(file):
     B0               158888.09829073      158888.09829160      158888.09829143
     """
     line = file.jump(5)
-    while line[:10] != '-'*10:
+    while line[:10] != "-" * 10:
         vibration, x, y, z = line.split()
         line = next(file)
 
@@ -246,7 +251,6 @@ Equilibrium dipole moment:    0.00000 a.u. (   0.00000 D)
     _, _, _, dipol_au, _, _, dipole_debye, _ = next(file).split()
     _, _, _, dipol_au, _, _, dipole_debye, _ = next(file).split()
 
-
     """
   Performing F(IIJJ)/F(JJII) consistency check
   Differences greater than 1 cm-1 will be printed.
@@ -259,11 +263,11 @@ Equilibrium dipole moment:    0.00000 a.u. (   0.00000 D)
 VPT2 vibrational analysis
     """
     line = file.jump(12)
-    while line[:10] != '-'*10:
+    while line[:10] != "-" * 10:
         i, _, k, _, f_iikk, f_kkii, diff = line.split()
         line = next(file)
     max_abs_diff = float(next(file).split()[-2])
-    rel_abs_diff = float(next(file).split()[-1][:-1].replace('D', 'E'))
+    rel_abs_diff = float(next(file).split()[-1][:-1].replace("D", "E"))
 
     """
 --------------------------------------------------------------------------------
@@ -277,7 +281,7 @@ VPT2 vibrational analysis
  12  8  8  -218.24682410   174.40313980     1.40665806    15.66287273
     """
     line = file.jump(10)
-    while line[:10] != '-'*10:
+    while line[:10] != "-" * 10:
         i, j, k, phi_ijk, delta_w_s, diff_diag_vpt2, splitting = line.split()
         line = next(file)
 
@@ -308,7 +312,7 @@ VPT2 vibrational analysis
     8   1675.7559   1663.9430      -11.8129      0.0000       0.0000      0.0000
     """
     line = file.jump(7)
-    while line[:10] != '-'*10:
+    while line[:10] != "-" * 10:
         mode, harm, fund, anh_contrib, harm_i, fund_i, anh_contrib_i = line.split()
         line = next(file)
 
@@ -346,7 +350,7 @@ Harm+VPT2             :       33.6449     140.7702      0.05361660     11767.485
    10    0    0    0    0  1   0   0   0   0  1886.514    0.000000   1903.718758
     """
     line = file.jump(7)
-    while line[:10] != '-'*10:
+    while line[:10] != "-" * 10:
         i, j, k, l, m, ni, nj, nk, nl, nm, anharm_freq, anharm_int, harmonic = line.split()
         line = next(file)
 
@@ -376,27 +380,28 @@ def read_matrix(file, shape=(3, 3), header=1, label=1, diagonal=False, symmetric
         matrix[i] = line.split()[label:]
 
     if diagonal and not np.allclose(matrix, np.diag(np.diagonal(matrix))):
-        raise ValueError('Non-diagonal matrix read in.')
+        raise ValueError("Non-diagonal matrix read in.")
     elif symmetric and not np.allclose(matrix, matrix.T):
-        raise ValueError('Non-symmetric matrix read in.')
+        raise ValueError("Non-symmetric matrix read in.")
 
     return matrix
 
-def print_matrix(matrix, header=None, labels=None, column_width='10.5'):
+
+def print_matrix(matrix, header=None, labels=None, column_width="10.5"):
     """
     Print a Matrix
     """
-    out = ''
+    out = ""
     if header is not None:
-        out += (f'{{:^{column_width}}} '*len(line)).format(*line).strip() + '\n'
+        out += (f"{{:^{column_width}}} " * len(line)).format(*line).strip() + "\n"
 
     if labels is not None:
         for label, vals in zip(labels, matrix):
-            out += f'{{:^{column_width}}} '.format(label)
-            out += (f'{{:>{column_width}f}} '*len(vals)).format(*vals).strip() + '\n'
+            out += f"{{:^{column_width}}} ".format(label)
+            out += (f"{{:>{column_width}f}} " * len(vals)).format(*vals).strip() + "\n"
     else:
         for vals in matrix:
-            out += (f'{{:> {column_width}f}} '*len(vals)).format(*vals).strip() + '\n'
+            out += (f"{{:> {column_width}f}} " * len(vals)).format(*vals).strip() + "\n"
     print(out)
 
 
@@ -408,10 +413,11 @@ class MyIter(mit.peekable):
     Strips lines before yielding iterator
     Keeps track of line number in file
     """
+
     def __init__(self, iterable):
         super().__init__(iterable)
         self.position = 0
-        self.current_line = ''
+        self.current_line = ""
 
     def __next__(self):
         self.position += 1
@@ -423,7 +429,7 @@ class MyIter(mit.peekable):
         Jump forward the specified number of elements in the iterator
         :return: the line n-steps forward
         """
-        for _ in range(num-1):
+        for _ in range(num - 1):
             next(self)
         if num > 0:
             return next(self)
@@ -432,13 +438,13 @@ class MyIter(mit.peekable):
         return super().peek().strip()
 
 
-if __name__ == '__main__':
-    out_file = sys.argv[1]if len(sys.argv) > 1 else 'output.dat'
-    out_file = '/home/vandezande/tmp/zeus/vib/cfour/sto-3g/CH4/output.dat'
+if __name__ == "__main__":
+    out_file = sys.argv[1] if len(sys.argv) > 1 else "output.dat"
+    out_file = "/home/vandezande/tmp/zeus/vib/cfour/sto-3g/CH4/output.dat"
     with open(out_file) as file:
         myiter = MyIter(file)
         try:
             read(myiter)
         except Exception as e:
-            print(f'Iterator on line: {myiter.position}\n{myiter.current_line}\n')
+            print(f"Iterator on line: {myiter.position}\n{myiter.current_line}\n")
             raise e

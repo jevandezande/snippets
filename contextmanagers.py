@@ -1,11 +1,15 @@
 import os
 from contextlib import contextmanager
+from typing import Iterator
 
 
 @contextmanager
-def cd(directory: str, makedir: bool = False, exist_ok: bool = False, verbose: bool = False):
+def cd(
+    directory: str, makedir: bool = False, exist_ok: bool = False, verbose: bool = False
+) -> Iterator[None]:
     """
-    Manage entering and exiting directories
+    Manage entering and exiting directories.
+
     :param directory: directory to enter
     :param makedir: make the directory
     :param exist_ok: if making a directory, don't error if it already exists
@@ -18,10 +22,10 @@ def cd(directory: str, makedir: bool = False, exist_ok: bool = False, verbose: b
 
     os.chdir(os.path.expanduser(directory))
 
-    if verbose:
-        print(f"Switched to {directory=}")
-
     try:
+        if verbose:
+            print(f"Switched to {directory=}")
+
         yield
     finally:
         os.chdir(previous_dir)

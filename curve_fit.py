@@ -8,14 +8,17 @@ data = np.array([0, 1, 3, 7, 3, 1, 0, 0.1, 0.3, 0.7, 0.3, 0.1, 0])
 # Initial guess
 p0 = [7, 3, 3]
 
+
 # Define a model function
 def gaussian(A, μ, σ):
-    return lambda x: A * np.exp(-((x - μ) ** 2) / (2 * σ ** 2))
+    return lambda x: A * np.exp(-((x - μ) ** 2) / (2 * σ**2))
 
 
 def f(x, *params):
     if len(params) % 3:
-        raise ValueError(f"Invalid number of parameters; should be divisible by 3: got {len(params)=}")
+        raise ValueError(
+            f"Invalid number of parameters; should be divisible by 3: got {len(params)=}"
+        )
 
     return np.sum((gaussian(A, μ, σ)(x) for A, μ, σ in chunked(params, 3)), axis=0)
 

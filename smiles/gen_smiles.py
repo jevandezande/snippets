@@ -46,7 +46,9 @@ def alkene_chains(carbons_max: int, start=2):
     yield from ("=".join(["CC"] * i)[1:-1] for i in range(start, carbons_max // 2 + 2))
 
 
-def rings(sizes: Iterable[int] | int, atoms: Iterable[str] | str = "C", strict: bool = False) -> Iterable[str]:
+def rings(
+    sizes: Iterable[int] | int, atoms: Iterable[str] | str = "C", strict: bool = False
+) -> Iterable[str]:
     """
     Generate rings of various sizes
 
@@ -128,7 +130,10 @@ def insert_groups(
 
     for group in groups:
         chains, chains_dup = itertools.tee(chains)
-        yield from (insert_in_str(f"({group})", chain, location) for chain, location in zip(chains_dup, locations))
+        yield from (
+            insert_in_str(f"({group})", chain, location)
+            for chain, location in zip(chains_dup, locations)
+        )
 
 
 if __name__ == "__main__":
