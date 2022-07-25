@@ -1,11 +1,14 @@
+#!/usr/bin/env zsh
+
 a='../abc/xyz.pdg'
 
-echo ${a:a} a
-echo ${a:c} c
-echo ${a:e} e
-echo ${a:h} h
-echo ${a:l} l
-echo ${a:q} q
-echo ${a:r} r
-echo ${a:t} t
-echo ${a:u} u
+echo ' ' ${a}
+echo a ${a:a}
+echo c ${a:c}
+echo e ${a:e}
+echo h ${a:h}
+echo l ${a:l}
+echo q ${a:q}
+echo r ${a:r}
+echo t ${a:t}
+echo u ${a:u}
