@@ -2,9 +2,10 @@
 from __future__ import annotations
 
 import itertools
-from more_itertools import take
-from typing import Generator, Iterable
 from pprint import pprint
+from typing import Iterable, Iterator
+
+from more_itertools import take
 
 period_2 = ["Li", "Be", "B", "C", "N", "O", "F", "Ne"]
 bent_carbon = ["C(C)C", "C(C)(C)C", "C(CC)C", "C(CC)(CC)C"]
@@ -29,7 +30,7 @@ def insert_in_str(group, string: str, index: int, strict: bool = False) -> str:
     return string[:index] + str(group) + string[index:]
 
 
-def alkyl_chains(carbons_max: int, start: int = 1) -> Iterable[str]:
+def alkyl_chains(carbons_max: int, start: int = 1) -> Iterator[str]:
     """
     >>> list(alkyl_chains(5))
     ['C', 'CC', 'CCC', 'CCCC', 'CCCCC']
@@ -48,7 +49,7 @@ def alkene_chains(carbons_max: int, start=2):
 
 def rings(
     sizes: Iterable[int] | int, atoms: Iterable[str] | str = "C", strict: bool = False
-) -> Iterable[str]:
+) -> Iterator[str]:
     """
     Generate rings of various sizes
 
@@ -72,7 +73,7 @@ def rings(
         yield f"{next(it)}1" + "".join(atom for atom in it) + "1"
 
 
-def aromatics(max_order: int) -> Iterable[str]:
+def aromatics(max_order: int) -> Iterator[str]:
     """
     Generate aromatics
 
@@ -84,7 +85,7 @@ def aromatics(max_order: int) -> Iterable[str]:
     yield from ("c1" + "cccc" * i + "c1" for i in range(1, (max_order + 1)))
 
 
-def append_groups(chains: Iterable[str] | str, groups: Iterable[str] | str) -> Iterable[str]:
+def append_groups(chains: Iterable[str] | str, groups: Iterable[str] | str) -> Iterator[str]:
     """
     >>> list(append_groups('CCC', 'Br'))[0]
     'CCCBr'
@@ -103,7 +104,7 @@ def insert_groups(
     chains: Iterable[str] | str,
     groups: Iterable[str] | str,
     locations: Iterable[int] | int,
-) -> Iterable[str]:
+) -> Iterator[str]:
     """
     Insert groups into chains at locations.
     If location > len(chain), it appends to the end.
