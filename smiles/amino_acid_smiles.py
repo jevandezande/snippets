@@ -1,3 +1,5 @@
+from typing import Iterable
+
 amino_acids = {
     "A": "C",
     "R": "CCCCNC(N)=N",
@@ -27,7 +29,7 @@ amino_acids = {
 full_smiles = {letter: f"OC(=O)C({smiles})N" for letter, smiles in amino_acids.items()}
 
 
-def aa_to_smiles(aa):
+def aa_to_smiles(aa: str) -> str:
     """
     >>> aa_to_smiles("A")
     'OC(=O)C(C)N'
@@ -37,7 +39,7 @@ def aa_to_smiles(aa):
     return full_smiles[aa]
 
 
-def aas_to_smiles(aas):
+def aas_to_smiles(aas: Iterable[str]) -> str:
     """
     >>> aas_to_smiles("CLB")
     'OC(=O)C(CS)NC(=O)C(CC(C)C)NC(=O)C(CC(O)=O)N'

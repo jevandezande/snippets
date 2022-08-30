@@ -101,9 +101,7 @@ def append_groups(chains: Iterable[str] | str, groups: Iterable[str] | str) -> I
 
 
 def insert_groups(
-    chains: Iterable[str] | str,
-    groups: Iterable[str] | str,
-    locations: Iterable[int] | int,
+    chains: Iterable[str] | str, groups: Iterable[str] | str, locations: Iterable[int] | int,
 ) -> Iterator[str]:
     """
     Insert groups into chains at locations.
