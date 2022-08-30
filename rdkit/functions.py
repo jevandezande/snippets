@@ -7,6 +7,7 @@ import numpy as np
 import psi4
 import py3Dmol
 import pyscf
+
 from rdkit import Chem, DataStructs
 from rdkit.Chem import AllChem
 from rdkit.Chem.Draw import SimilarityMaps
@@ -14,7 +15,18 @@ from rdkit.Chem.rdchem import BondType
 from rdkit.Chem.rdMolDescriptors import GetMorganFingerprint
 from rdkit.SimDivFilters.rdSimDivPickers import MaxMinPicker
 
-ATOMIC_NUMBERS = ('X', 'H', 'He', 'Li', 'Be', 'B', 'C', 'N', 'O', 'F', 'Ne', 'Na', 'Mg', 'Al', 'Si', 'P', 'S', 'Cl', 'Ar', 'K', 'Ca', 'Sc', 'Ti', 'V', 'Cr', 'Mn', 'Fe', 'Co', 'Ni', 'Cu', 'Zn', 'Ga', 'Ge', 'As', 'Se', 'Br', 'Kr', 'Rb', 'Sr', 'Y', 'Zr', 'Nb', 'Mo', 'Tc', 'Ru', 'Rh', 'Pd', 'Ag', 'Cd', 'In', 'Sn', 'Sb', 'Te', 'I', 'Xe', 'Cs', 'Ba', 'La', 'Ce', 'Pr', 'Nd', 'Pm', 'Sm', 'Eu', 'Gd', 'Tb', 'Dy', 'Ho', 'Er', 'Tm', 'Yb', 'Lu', 'Hf', 'Ta', 'W', 'Re', 'Os', 'Ir', 'Pt', 'Au', 'Hg', 'Tl', 'Pb', 'Bi', 'Po', 'At', 'Rn', 'Fr', 'Ra', 'Ac', 'Th', 'Pa', 'U', 'Np', 'Pu', 'Am', 'Cm', 'Bk', 'Cf', 'Es', 'Fm', 'Md', 'No', 'Lr', 'Rf', 'Db', 'Sg', 'Bh', 'Hs', 'Mt', 'Ds', 'Rg', 'Cn', 'Nh', 'Fl', 'Mc', 'Lv', 'Ts', 'Og')
+# fmt:off
+ATOMIC_NUMBERS = (
+    'X',
+    'H', 'He',
+    'Li', 'Be', 'B', 'C', 'N', 'O', 'F', 'Ne',
+    'Na', 'Mg', 'Al', 'Si', 'P', 'S', 'Cl', 'Ar',
+    'K', 'Ca', 'Sc', 'Ti', 'V', 'Cr', 'Mn', 'Fe', 'Co', 'Ni', 'Cu', 'Zn', 'Ga', 'Ge', 'As', 'Se', 'Br', 'Kr',
+    'Rb', 'Sr', 'Y', 'Zr', 'Nb', 'Mo', 'Tc', 'Ru', 'Rh', 'Pd', 'Ag', 'Cd', 'In', 'Sn', 'Sb', 'Te', 'I', 'Xe',
+    'Cs', 'Ba', 'La', 'Ce', 'Pr', 'Nd', 'Pm', 'Sm', 'Eu', 'Gd', 'Tb', 'Dy', 'Ho', 'Er', 'Tm', 'Yb', 'Lu', 'Hf', 'Ta', 'W', 'Re', 'Os', 'Ir', 'Pt', 'Au', 'Hg', 'Tl', 'Pb', 'Bi', 'Po', 'At', 'Rn',
+    'Fr', 'Ra', 'Ac', 'Th', 'Pa', 'U', 'Np', 'Pu', 'Am', 'Cm', 'Bk', 'Cf', 'Es', 'Fm', 'Md', 'No', 'Lr', 'Rf', 'Db', 'Sg', 'Bh', 'Hs', 'Mt', 'Ds', 'Rg', 'Cn', 'Nh', 'Fl', 'Mc', 'Lv', 'Ts', 'Og'
+)
+# fmt:on
 
 ions = [
     ATOMIC_NUMBERS[i]
@@ -298,9 +310,7 @@ def plot_vals(mol, vals, colorMap="jet", contourLines=10):
 
 
 def get_mo_view(mol, wfn):
-    gridspace = 0
-    homo_idx = wfn.nalpha()
-    lumo_idx = homo_idx + 1
+    """
     self.psi4.set_options(
         {
             "cubeprop_tasks": ["ESP", "FRONTIER_ORBITALS", "Density", "DUAL_DESCRIPTOR"],
@@ -308,8 +318,13 @@ def get_mo_view(mol, wfn):
             "cubeprop_filepath": self.tempdir,
         }
     )
+    """
+    gridspace = 0
+    homo_idx = wfn.nalpha()
+    lumo_idx = homo_idx + 1
+    print(homo_idx, lumo_idx, gridspace)
 
-    Chem.MolToMolFile(mol, "target.mol")
+    # Chem.MolToMolFile(mol, "target.mol")
     psi4.cubeprop(wfn)
 
 

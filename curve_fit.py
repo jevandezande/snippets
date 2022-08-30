@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
-from scipy.optimize import curve_fit
 from more_itertools import chunked
+from scipy.optimize import curve_fit
 
 data = np.array([0, 1, 3, 7, 3, 1, 0, 0.1, 0.3, 0.7, 0.3, 0.1, 0])
 

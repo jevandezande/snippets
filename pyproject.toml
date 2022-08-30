@@ -1,7 +1,39 @@
+[project]
+authors = [ { name = "Jonathon Vandezande", email = "jevandezande@gmail.com" }, ]
+requires-python = ">=3.10"
+license = "MIT"
+license_file = "LICENSE"
+name = "Snippets"
+description = "Random code snippets"
+readme = "README.md"
+keywords = ["chemistry"]
+classifiers = [
+	"Development Status :: 3 - Alpha",
+	"Intended Audience :: Developers",
+	"License :: OSI Approved :: MIT",
+	"Operating System :: OS Independent",
+	"Programming Language :: Python",
+	"Programming Language :: Python :: 3.10",
+	"Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+[project.urls]
+repository = "https://github.com/jevandezande/snippets"
+
+[project.scripts]
+
 [tool.black]
 line-length = 100
+target-version = ["py310"]
 
 [tool.isort]
 profile = "black"
 line_length = 100
 
+[tool.mypy]
+ignore_missing_imports = true
+
+[tool.pytest]
+testpaths = ["tests"]
+addopts = "--doctest-modules"
+doctest_optionflags = "NORMALIZE_WHITESPACE"
