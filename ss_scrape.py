@@ -179,9 +179,10 @@ def query_builds(
     version_page = requests.get(version_url)
     version_soup = BeautifulSoup(version_page.text, features="html.parser")
 
+    # TODO: old version of Schrödinger Suite use different numbering (e.g. build08)
     builds = natsorted(li.text[-3:] for li in version_soup.find_all(attrs={"class": "build"}))
     if verbose:
-        print(f"Builds:\n{builds}\n")
+        print(f"{version} Build:\n{builds}\n")
 
     return builds
 
@@ -193,17 +194,68 @@ def query(
     verbose: bool = False,
 ) -> tuple[str, str]:
     """
-    Find the latest version
+    Find the latest available version and build
 
     :return: version, build
     """
-    version = version or query_versions(op_sys, verbose)[-1]
-    build = build or query_builds(op_sys, version, verbose)[-1]
+    target_version = version
+    target_build = build
 
-    if verbose:
-        print(f"Selected: {version}/{build}")
+    versions = query_versions(op_sys, verbose)
 
-    return version, build
+    if target_version:
+        if target_version not in versions:
+            raise ValueError(f"Version '{version}' is not available: {versions=}")
+        versions = [target_version]
+
+    for version in versions[::-1]:
+        builds = query_builds(op_sys, version, verbose)
+
+        if target_build:
+            if target_build not in builds:
+                raise ValueError(f"Build '{build}' is not available: {builds=}")
+            builds = [target_build]
+
+        for build in builds[::-1]:
+            if check_installer(op_sys, version, build, verbose):
+                if verbose:
+                    print(f"Selected: {version}/{build}")
+                return version, build
+
+    raise ValueError(
+        f"Could not find installer with requirements: {target_version=}/{target_build=}"
+    )
+
+
+def check_installer(
+    op_sys: str,
+    version: str,
+    build: str,
+    verbose: bool = False,
+) -> bool:
+    """
+    Check if an installer exists for specified version and build
+    """
+    url = f"{OB_URL}/{version}/build-{build}"
+
+    installers_page = requests.get(url)
+    if not installers_page:
+        return False
+
+    installers_soup = BeautifulSoup(installers_page.text, features="html.parser")
+    if not installers_soup:
+        return False
+
+    adv_inst = installers_soup.find("h3", string="Advanced Installers")
+    if not adv_inst:
+        return False
+
+    if not (installers_page := requests.get(url)):
+        return False
+    if not (installers_soup := BeautifulSoup(installers_page.text, features="html.parser")):
+        return False
+
+    return bool(installers_soup.find("h3", string="Advanced Installers"))
 
 
 def get_installer(
