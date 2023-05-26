@@ -1,6 +1,4 @@
 #!/usr/bin/env python3
-from __future__ import annotations
-
 import itertools
 from pprint import pprint
 from typing import Iterable, Iterator
@@ -18,16 +16,16 @@ bonds = ["", "=", "#"]
 functional_groups = ["=O", "(=O)O", "C#N", "N=C=O"]
 
 
-def insert_in_str(group, string: str, index: int, strict: bool = False) -> str:
+def insert_in_str(group: str, string: str, index: int, strict: bool = False) -> str:
     """
     Insert a group into a string.
 
-    >>> insert_in_str(123, 'abcd', 2)
+    >>> insert_in_str('123', 'abcd', 2)
     'ab123cd'
     """
     if strict and index > len(string):
         raise ValueError("Trying to insert beyond the end of a string.")
-    return string[:index] + str(group) + string[index:]
+    return string[:index] + group + string[index:]
 
 
 def alkyl_chains(carbons_max: int, start: int = 1) -> Iterator[str]:
@@ -35,15 +33,19 @@ def alkyl_chains(carbons_max: int, start: int = 1) -> Iterator[str]:
     >>> list(alkyl_chains(5))
     ['C', 'CC', 'CCC', 'CCCC', 'CCCCC']
     """
+    if start < 0:
+        raise ValueError("Expected start to be non-negative, got: {start}")
     yield from ("C" * i for i in range(start, carbons_max + 1))
 
 
-def alkene_chains(carbons_max: int, start=2):
+def alkene_chains(carbons_max: int, start: int = 2) -> Iterator[str]:
     """
     Note: only produces an even number of carbon atoms
     >>> list(alkene_chains(10))
     ['C=C', 'C=CC=C', 'C=CC=CC=C', 'C=CC=CC=CC=C', 'C=CC=CC=CC=CC=C']
     """
+    if start < 0:
+        raise ValueError("Expected start to be non-negative, got: {start}")
     yield from ("=".join(["CC"] * i)[1:-1] for i in range(start, carbons_max // 2 + 2))
 
 
@@ -55,8 +57,8 @@ def rings(
 
     >>> list(rings([2], ['C']))
     []
-    >>> list(rings(4, 'C'))
-    ['C1CCC1']
+    >>> list(rings(4, 'B'))
+    ['B1BBB1']
     >>> list(rings([4, 5], ['C', 'N']))
     ['C1NCN1', 'C1NCNC1']
     """
@@ -101,7 +103,9 @@ def append_groups(chains: Iterable[str] | str, groups: Iterable[str] | str) -> I
 
 
 def insert_groups(
-    chains: Iterable[str] | str, groups: Iterable[str] | str, locations: Iterable[int] | int,
+    chains: Iterable[str] | str,
+    groups: Iterable[str] | str,
+    locations: Iterable[int] | int,
 ) -> Iterator[str]:
     """
     Insert groups into chains at locations.
