@@ -1,35 +1,37 @@
-import shutil
 import os
+import shutil
 from contextlib import contextmanager
-from typing import Iterator, Iterable
 from pathlib import Path
+from typing import Iterable, Iterator
 
 
 @contextmanager
 def cd(
     directory: str | Path,
-    makedir: bool = False,
+    mkdir: bool = False,
     exist_ok: bool = False,
-    copy_along: Iterable[str] = (),
+    copy_along: Iterable[str | Path] = (),
     verbose: bool = False,
 ) -> Iterator[None]:
     """
     Manage entering and exiting directories.
 
     :param directory: directory to enter
-    :param makedir: make the directory
+    :param mkdir: make the directory
     :param exist_ok: if making a directory, don't error if it already exists
     :param copy_along: copy files and directory along to directory
     :param verbose: print when entering and exiting a directory
     """
     directory = Path(directory)
 
-    if makedir:
-        directory.mkdir(parents=True, exist_ok=True)
+    if mkdir:
+        directory.mkdir(parents=True, exist_ok=exist_ok)
 
     previous_dir = Path.cwd()
 
     for item in copy_along:
+        if verbose:
+            print(f"Copying: {item}")
         shutil.copy(item, directory)
 
     os.chdir(directory)
