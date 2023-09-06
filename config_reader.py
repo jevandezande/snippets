@@ -1,5 +1,6 @@
-import os
 from importlib import resources
+from importlib.resources.abc import Traversable
+from pathlib import Path
 from typing import Any
 
 import tomllib
@@ -24,36 +25,29 @@ def read_configs(section: str | None = None) -> dict[str, Any]:
     return defaults
 
 
+def read_config(file: Path | Traversable, section: str | None = None) -> dict[str, Any]:
+    """
+    Reads specified configuration
+
+    :param file: file to read
+    :param section: section to select
+    """
+    with file.open("rb") as f:
+        if section:
+            return tomllib.load(f)[section]  # type:ignore[no-any-return]
+        return tomllib.load(f)
+
+
 def read_default_config(section: str | None = None) -> dict[str, Any]:
     """
     Reads configurations from PROJECT_ROOT/PROJECT_NAME/default_config.toml
-
-    :param section: section to select
     """
-    file = resources.files(f"{PROJECT_NAME}").joinpath("default_config.toml")
-    with file.open("rb") as f:
-        config = tomllib.load(f)
-
-    if section:
-        return config[section]  # type:ignore[no-any-return]
-
-    return config
+    file = resources.files(PROJECT_NAME).joinpath("default_config.toml")
+    return read_config(file, section)
 
 
 def read_user_config(section: str | None = None) -> dict[str, Any]:
     """
     Reads configurations from ~/.config/PROJECT_NAME/config.toml
-
-    :param section: section to select
     """
-    config_file = os.path.join(os.path.expanduser("~"), ".config", f"{PROJECT_NAME}", "config.toml")
-    if not os.path.exists(config_file):
-        raise FileNotFoundError("Could not find user {config_file=}")
-
-    with open(config_file, "rb") as f:
-        config = tomllib.load(f)
-
-    if section:
-        return config[section]  # type:ignore[no-any-return]
-
-    return config
+    return read_config(Path(f"~/.config/{PROJECT_NAME}/config.toml").expanduser(), section)
