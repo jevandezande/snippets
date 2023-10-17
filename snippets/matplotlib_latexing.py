@@ -1,4 +1,4 @@
-import matplotlib.pyplot as plt  # type: ignore
+import matplotlib.pyplot as plt
 
 golden_mean = (5**0.5 - 1) / 2  # Aesthetic ratio
 

@@ -2,8 +2,8 @@
 
 from argparse import ArgumentParser
 
-from rdkit.Chem import AddHs, MolFromSmiles, MolToXYZFile  # type: ignore
-from rdkit.Chem.AllChem import EmbedMolecule, MMFFOptimizeMolecule  # type: ignore
+from rdkit.Chem import AddHs, MolFromSmiles, MolToXYZFile
+from rdkit.Chem.AllChem import EmbedMolecule, MMFFOptimizeMolecule
 
 
 def smiles_to_xyz(smiles: str, output: str = "geom.xyz") -> None:

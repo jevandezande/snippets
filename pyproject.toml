@@ -46,6 +46,10 @@ files = ["snippets", "tests"]
 strict = true
 pretty = true
 
+[[tool.mypy.overrides]]
+module = "rdkit.*"
+ignore_missing_imports = true
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "--doctest-modules"

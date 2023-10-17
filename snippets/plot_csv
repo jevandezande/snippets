@@ -30,4 +30,4 @@ for ax, file in zip(chain.from_iterable(axes), files):
     ax.legend()
     ax.set_title(file)
 
-plt.show()
+plt.show()  # type: ignore
