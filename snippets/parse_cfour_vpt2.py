@@ -50,7 +50,7 @@ def read(file: MyIter) -> None:
     line = next(file)
     while line != "AAA FCUBIC --------------------":
         if line != "AAA FCUBIC bef trafo --------------------":
-            _, num, _, value = line.split()
+            _, num, _, value = line.split()  # noqa: F841
         line = next(file)
 
     """
@@ -60,8 +60,9 @@ def read(file: MyIter) -> None:
     line = next(file)
     while line != "Special treatment for modes:":
         _, ii, _, jj, _, kk = line.split()
-        i, j, k = int(ii), int(jj), int(float(kk))
+        i, j, k = int(ii), int(jj), int(float(kk))  # noqa: F841
         float(next(file).split()[-1])
+        fcubic = float(next(file).split()[-1])  # noqa: F841
         line = next(file)
 
     """
@@ -101,11 +102,11 @@ def read(file: MyIter) -> None:
     float(next(file).split()[-2])
     file.jump(3)
     while file.peek().split()[0] == "AAA":
-        _, _, _, _, mode, _, t_prefact = next(file).split()
-        _, _, conv_factor, _, omega, _ = next(file).split()
+        _, _, _, _, mode, _, t_prefact = next(file).split()  # noqa: F841
+        _, _, conv_factor, _, omega, _ = next(file).split()  # noqa: F841
         float(next(file))
         next(file)
-        _, a, b, c = next(file).split()
+        _, a, b, c = next(file).split()  # noqa: F841
         next(file).split()[-1]
 
     #    """
@@ -179,7 +180,7 @@ def read(file: MyIter) -> None:
         next(file)
         float(next(file).split()[-1])
         float(next(file).split()[-1])
-        x, y, z = map(float, next(file).split()[-3:])
+        x, y, z = map(float, next(file).split()[-3:])  # noqa: F841
         file.jump(2)
         float(next(file).split()[-1])
 
@@ -188,9 +189,14 @@ def read(file: MyIter) -> None:
         next(file)
         float(next(file).split()[-1])
         float(next(file).split()[-1])
-        x, y, z = map(float, next(file).split()[-3:])
+        x, y, z = map(float, next(file).split()[-3:])  # noqa: F841
         results.append(
-            [atom_number, derivs, ref_geom_shielding_tensor, vib_correct_shielding_tensor]
+            [
+                atom_number,
+                derivs,
+                ref_geom_shielding_tensor,
+                vib_correct_shielding_tensor,
+            ]
         )
         next(file)
 
@@ -215,7 +221,7 @@ def read(file: MyIter) -> None:
 """
     line = file.jump(4)
     while line[:10] != "-" * 10:
-        ii, jj, re, rg, ra = line.split()
+        ii, jj, re, rg, ra = line.split()  # noqa: F841
         line = next(file)
 
     """
@@ -234,7 +240,7 @@ def read(file: MyIter) -> None:
        """
     line = file.jump(11)
     while line[:10] != "-" * 10:
-        axis, mode, coriolis, quadratic, anharmonic, total = line.split()
+        axis, mode, coriolis, quadratic, anharmonic, total = line.split()  # noqa: F841
         line = next(file)
 
     """
@@ -248,7 +254,7 @@ def read(file: MyIter) -> None:
     """
     line = file.jump(8)
     while line[:10] != "-" * 10:
-        vibration, x, y, z = line.split()  # type:ignore
+        vibration, x, y, z = line.split()  # noqa: F841
         line = next(file)
 
     """
@@ -261,7 +267,7 @@ def read(file: MyIter) -> None:
     """
     line = file.jump(5)
     while line[:10] != "-" * 10:
-        vibration, x, y, z = line.split()  # type:ignore
+        vibration, x, y, z = line.split()  # noqa: F841
         line = next(file)
 
     """
@@ -277,11 +283,11 @@ Equilibrium dipole moment:    0.00000 a.u. (   0.00000 D)
 Equilibrium dipole moment:    0.00000 a.u. (   0.00000 D)
     """
     line = file.jump(5)
-    _, x_au, y_au, z_au, x_debye, y_debye, y_debye = next(file).split()
-    _, x_au, y_au, z_au, x_debye, y_debye, y_debye = next(file).split()
+    _, x_au, y_au, z_au, x_debye, y_debye, y_debye = next(file).split()  # noqa: F841
+    _, x_au, y_au, z_au, x_debye, y_debye, y_debye = next(file).split()  # noqa: F841
     next(file)
-    _, _, _, dipol_au, _, _, dipole_debye, _ = next(file).split()
-    _, _, _, dipol_au, _, _, dipole_debye, _ = next(file).split()
+    _, _, _, dipol_au, _, _, dipole_debye, _ = next(file).split()  # noqa: F841
+    _, _, _, dipol_au, _, _, dipole_debye, _ = next(file).split()  # noqa: F841
 
     """
   Performing F(IIJJ)/F(JJII) consistency check
@@ -296,7 +302,7 @@ VPT2 vibrational analysis
     """
     line = file.jump(12)
     while line[:10] != "-" * 10:
-        i, _, k, _, f_iikk, f_kkii, diff = line.split()  # type:ignore
+        i, _, k, _, f_iikk, f_kkii, diff = line.split()  # noqa: F841
         line = next(file)
     float(next(file).split()[-2])
     float(next(file).split()[-1][:-1].replace("D", "E"))
@@ -314,7 +320,15 @@ VPT2 vibrational analysis
     """
     line = file.jump(10)
     while line[:10] != "-" * 10:
-        i, j, k, phi_ijk, delta_w_s, diff_diag_vpt2, splitting = line.split()  # type:ignore
+        (
+            i,
+            j,
+            k,
+            phi_ijk,
+            delta_w_s,
+            diff_diag_vpt2,
+            splitting,
+        ) = line.split()  # type:ignore
         line = next(file)
 
     """
