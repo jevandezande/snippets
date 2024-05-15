@@ -9,7 +9,6 @@ import numpy as np
 import psi4
 import py3Dmol
 import pyscf
-
 import rdkit
 from rdkit import Chem, DataStructs
 from rdkit.Chem import AllChem

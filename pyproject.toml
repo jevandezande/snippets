@@ -19,7 +19,7 @@ more_itertools = "*"
 [tool.poetry.group.dev.dependencies]
 mypy = "*"
 pre-commit = "*"
-ruff = "*"
+ruff = ">=0.4"
 
 [tool.poetry.group.test.dependencies]
 pytest = "*"
