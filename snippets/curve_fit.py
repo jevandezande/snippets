@@ -1,4 +1,6 @@
 # type: ignore
+"""Curve fitting using scipy.optimize.curve_fit."""
+
 from typing import Callable
 
 import matplotlib.pyplot as plt
@@ -14,10 +16,12 @@ p0 = [7, 3, 3]
 
 # Define a model function
 def gaussian(A: float, μ: float, σ: float) -> Callable[[float], float]:
+    """Return a Gaussian function with the given parameters."""
     return lambda x: A * np.exp(-((x - μ) ** 2) / (2 * σ**2))
 
 
 def f(x: float, *params: list[float]) -> float:
+    """Return the sum of Gaussian functions with the given parameters."""
     if len(params) % 3:
         raise ValueError(
             f"Invalid number of parameters; should be divisible by 3: got {len(params)=}"

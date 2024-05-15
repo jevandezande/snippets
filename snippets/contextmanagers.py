@@ -1,3 +1,5 @@
+"""Context managers for common tasks."""
+
 import os
 import shutil
 from contextlib import contextmanager
@@ -21,6 +23,7 @@ def cd(
     :param exist_ok: if making a directory, don't error if it already exists
     :param copy_along: copy files and directory along to directory
     :param verbose: print when entering and exiting a directory
+    :yield: None
     """
     directory = Path(directory)
 

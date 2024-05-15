@@ -1,4 +1,5 @@
-#!/usr/bin/env python3
+"""Generate SMILES strings for various molecules."""
+
 import itertools
 from pprint import pprint
 from typing import Iterable, Iterator
@@ -20,6 +21,12 @@ def insert_in_str(group: str, string: str, index: int, strict: bool = False) -> 
     """
     Insert a group into a string.
 
+    :param group: group to insert
+    :param string: smiles to insert into
+    :param index: index to insert at
+    :param strict: raise ValueError if bad index
+    :return: new string with group inserted
+
     >>> insert_in_str('123', 'abcd', 2)
     'ab123cd'
     """
@@ -30,6 +37,12 @@ def insert_in_str(group: str, string: str, index: int, strict: bool = False) -> 
 
 def alkyl_chains(carbons_max: int, start: int = 1) -> Iterator[str]:
     """
+    Generate alkyl chains of increasing length.
+
+    :param carbons_max: maximum number of carbons in the chain
+    :param start: minimum number of carbons in the chain
+    :yield: alkyl chains
+
     >>> list(alkyl_chains(5))
     ['C', 'CC', 'CCC', 'CCCC', 'CCCCC']
     """
@@ -40,7 +53,14 @@ def alkyl_chains(carbons_max: int, start: int = 1) -> Iterator[str]:
 
 def alkene_chains(carbons_max: int, start: int = 2) -> Iterator[str]:
     """
+    Generate alkene chains of increasing length.
+
     Note: only produces an even number of carbon atoms
+
+    :param carbons_max: maximum number of carbons in the chain
+    :param start: minimum number of carbons in the chain
+    :yield: alkene chains
+
     >>> list(alkene_chains(10))
     ['C=C', 'C=CC=C', 'C=CC=CC=C', 'C=CC=CC=CC=C', 'C=CC=CC=CC=CC=C']
     """
@@ -53,7 +73,12 @@ def rings(
     sizes: Iterable[int] | int, atoms: Iterable[str] | str = "C", strict: bool = False
 ) -> Iterator[str]:
     """
-    Generate rings of various sizes
+    Generate rings of various sizes.
+
+    :param sizes: sizes of the rings
+    :param atoms: atoms in the ring
+    :param strict: raise ValueError if bad size
+    :yield: SMILES strings of the rings
 
     >>> list(rings([2], ['C']))
     []
@@ -77,7 +102,10 @@ def rings(
 
 def aromatics(max_order: int) -> Iterator[str]:
     """
-    Generate aromatics
+    Generate aromatics.
+
+    :param max_order: maximum number of benzene rings in the aromatic
+    :yield: SMILES strings of the aromatics
 
     >>> list(aromatics(0))
     []
@@ -89,6 +117,12 @@ def aromatics(max_order: int) -> Iterator[str]:
 
 def append_groups(chains: Iterable[str] | str, groups: Iterable[str] | str) -> Iterator[str]:
     """
+    Append groups to chains.
+
+    :param chains: chains to append groups to
+    :param groups: groups to append
+    :yield: SMILES strings of the chains with groups appended
+
     >>> list(append_groups('CCC', 'Br'))[0]
     'CCCBr'
     >>> list(append_groups(['CC', 'HO'], ['12', '6789']))
@@ -109,13 +143,18 @@ def insert_groups(
 ) -> Iterator[str]:
     """
     Insert groups into chains at locations.
-    If location > len(chain), it appends to the end.
 
+    If location > len(chain), it appends to the end.
     If multiple chains and locations are specified, they are zipped together.
 
     Warnings:
         Does not deal with clashing numbers in rings.
         Does not remove accidental duplicates.
+
+    :param chains: chains to insert groups into
+    :param groups: groups to insert
+    :param locations: locations to insert groups at
+    :yield: SMILES strings of the chains with groups inserted
     """
     if isinstance(chains, str):
         if isinstance(locations, int):

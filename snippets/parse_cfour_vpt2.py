@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 # type: ignore
+"""Parse CFour VPT2 output file."""
+
 import sys
 from typing import Iterable
 
@@ -10,7 +12,7 @@ from numpy.typing import NDArray
 
 class MyIter(mit.peekable[str]):
     """
-    A few hack on iterable to be more user friendly for parsing files
+    A few hack on iterable to be more user friendly for parsing files.
 
     Changes:
     Strips lines before yielding iterator
@@ -23,13 +25,16 @@ class MyIter(mit.peekable[str]):
         self.current_line = ""
 
     def __next__(self) -> str:
+        """Get next line and strip."""
         self.position += 1
         self.current_line = super().__next__().strip()
         return self.current_line
 
     def jump(self, num: int) -> str:
         """
-        Jump forward the specified number of elements in the iterator
+        Jump forward the specified number of elements in the iterator.
+
+        :param num: number of steps to jump
         :return: the line n-steps forward
         """
         for _ in range(num - 1):
@@ -39,10 +44,12 @@ class MyIter(mit.peekable[str]):
         return ""
 
     def peek(self) -> str:
+        """Peek at the next line without advancing the iterator."""
         return super().peek().strip()
 
 
 def read(file: MyIter) -> None:
+    """Read the CFour VPT2 output file."""
     while next(file) != "PARAMETERS RELEVANT TO MOLECULAR STRUCTURE":
         continue
 
@@ -424,7 +431,7 @@ def read_matrix(
     symmetric: bool = False,
 ) -> NDArray[np.float_]:
     """
-    Reads a matrix
+    Read a matrix.
 
     :param file: MyIter of a file starting on the first line of a matrix
     :param shape: the shape of the matrix
@@ -461,7 +468,12 @@ def print_matrix(
     column_width: str = "10.5",
 ) -> None:
     """
-    Print a Matrix
+    Print a Matrix.
+
+    :param matrix: matrix to print
+    :param header: number of header lines
+    :param labels: labels for each row
+    :param column_width: width of each column
     """
     out = ""
     line = matrix[0]

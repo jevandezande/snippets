@@ -1,4 +1,6 @@
 # type: ignore
+"""Helper functions for RDKit."""
+
 import re
 from collections import Counter
 from itertools import chain
@@ -38,7 +40,7 @@ ions = [
 
 def remove_charges(smiles: str) -> str:
     """
-    Removes any charges in a SMILES string.
+    Remove any charges in a SMILES string.
 
     :param smiles: the SMILES string
     :return: a new SMILES string
@@ -48,7 +50,7 @@ def remove_charges(smiles: str) -> str:
 
 def remove_ions(smiles: str) -> str:
     """
-    Removes any chunks of a SMILES string if it contains an atom identified as an ion.
+    Remove any chunks of a SMILES string if it contains an atom identified as an ion.
 
     :param smiles: the SMILES string
     :return: a new SMILES string
@@ -86,6 +88,7 @@ def conjugated_subgraphs(mol: rdkit.Mol) -> Iterator[Any]:
 def multiple_conjugated_subgraphs(mol: rdkit.Mol, threshold: int = 5) -> bool:
     """
     Determine if there are multiple connected subgraphs of conjugated bonds in a molecule.
+
     See :conjugated_subgraphs():
 
     :param mol: an RDKit.mol
@@ -101,6 +104,7 @@ def multiple_conjugated_subgraphs(mol: rdkit.Mol, threshold: int = 5) -> bool:
 def num_conjugated_subgraphs(mol: rdkit.Mol) -> int:
     """
     Determine the number of connected subgraphs of conjugated bonds in a molecule.
+
     See :conjugated_subgraphs():
 
     :param mol: an RDKit.mol
@@ -112,6 +116,7 @@ def num_conjugated_subgraphs(mol: rdkit.Mol) -> int:
 def largest_conjugated_subgraph(mol: rdkit.Mol) -> int:
     """
     Determine the size of the largest connected subgraph of conjugated bonds in a molecule.
+
     See :conjugated_subgraphs():
 
     Warning: single bonds count as a conjugated bond if between unsaturation,
@@ -148,7 +153,7 @@ def count_bond_types(mol: rdkit.Mol) -> tuple[int, int, int, int, int, int]:
 
 def generate_conformations(mol: rdkit.Mol, numConfs: int = 10) -> tuple[rdkit.Mol, int, float]:
     """
-    Generate 3D conformations
+    Generate 3D conformations.
 
     :param mol: an RDKit.mol
     :return: molecule and lowest energy conformation index
@@ -169,7 +174,7 @@ def generate_conformations(mol: rdkit.Mol, numConfs: int = 10) -> tuple[rdkit.Mo
 
 def make_geometry(mol: rdkit.Mol, confId: int, atomicNum: bool = False) -> str:
     """
-    Makes a geometry string from the designated conformer.
+    Make a geometry string from the designated conformer.
 
     :param mol: an RDKit.Mol
     :param confId: the conformer to select.
@@ -189,11 +194,11 @@ def make_geometry(mol: rdkit.Mol, confId: int, atomicNum: bool = False) -> str:
 
 def make_psi4_geometry(geom: list[list[float | str]] | str, confId: int | None = None) -> Any:
     """
-    Makes a psi4 geometry object.
+    Make a Psi4 geometry object.
 
     :param geom: an RDKit.Mol or a string
     :param confId: the conformer to select, if needed
-    :return: psi4 geometry
+    :return: Psi4 geometry
     """
     if not isinstance(geom, str):
         assert confId
@@ -209,7 +214,7 @@ def energy(
     **kwargs: dict[str, Any],
 ) -> tuple[float, Any]:
     """
-    Finds the energy of a given molecule
+    Find the energy of a given molecule.
 
     :param geom: an RDKit.Mol or a string
     :param confId: the ID of the conformer to optimize
@@ -237,7 +242,7 @@ def homo_lumo(
     **kwargs: dict[str, Any],
 ) -> tuple[float, float, float]:
     """
-    Finds the HOMO and LUMO of a given molecule
+    Find the HOMO and LUMO of a given molecule.
 
     :param geom: the target molecule
     :param confId: the ID of the conformer to optimize, if needed
@@ -261,7 +266,7 @@ def optimize(
     **kwargs: dict[str, Any],
 ) -> Any:
     """
-    Optimizes the given conformation.
+    Optimize the given conformation.
 
     :param mol: an RDKit.Mol or a string
     :param confId: the ID of the conformer to optimize, if needed
@@ -284,7 +289,8 @@ def optimize(
 
 def show_3D_mol(mol: rdkit.Mol, confId: int) -> Any:
     """
-    Shows a molecule in 3D
+    Show a molecule in 3D.
+
     :param: an RDKit.mol
     :param confId: the IR of the conformer to show
     :return: molBlock
@@ -303,7 +309,7 @@ def show_3D_mol(mol: rdkit.Mol, confId: int) -> Any:
 
 def gasteiger_charges(mol: rdkit.Mol) -> list[float]:
     """
-    Compute and plot the Gasteiger charges
+    Compute and plot the Gasteiger charges.
 
     :param mol: an RDKit.Mol
     :return: charges, plot of charges
@@ -316,7 +322,7 @@ def gasteiger_charges(mol: rdkit.Mol) -> list[float]:
 
 def plot_vals(mol: rdkit.Mol, vals: float, colorMap: str = "jet", contourLines: int = 10) -> Any:
     """
-    Plot values on a SimilarityMap
+    Plot values on a SimilarityMap.
 
     :param mol: an RDKit.mol
     :return: SimilarityMap
@@ -328,6 +334,8 @@ def plot_vals(mol: rdkit.Mol, vals: float, colorMap: str = "jet", contourLines: 
 
 def get_mo_view(mol: rdkit.Mol, wfn: Any) -> None:
     """
+    Visualize the molecular orbitals.
+
     self.psi4.set_options(
         {
             "cubeprop_tasks": ["ESP", "FRONTIER_ORBITALS", "Density", "DUAL_DESCRIPTOR"],
@@ -353,7 +361,7 @@ def tddft(
     nstates: int = 5,
 ) -> None:
     """
-    Run TD-DFT with pyscf
+    Run TD-DFT with pyscf.
 
     :param geom: an RDKit.Mol or a string
     :param method: method to use
@@ -381,7 +389,13 @@ def tddft(
     mytd.analyze()
 
 
-def largest_chromophore(mol: rdkit.Mol) -> int | float:
+def largest_chromophore(mol: rdkit.Mol) -> int:
+    """
+    Find the largest cromophore in a Molecule.
+
+    :param mol: rdKit molecule
+    :return: the number of atoms in the largest chromophore
+    """
     edges = [
         (bond.GetBeginAtomIdx(), bond.GetEndAtomIdx())
         for bond in mol.GetBonds()
@@ -393,7 +407,7 @@ def largest_chromophore(mol: rdkit.Mol) -> int | float:
     connectivity = list(nx.connected_components(G))
 
     if not connectivity:
-        return np.nan
+        return 0
 
     return connectivity[np.argmax(map(len, connectivity))]  # type:ignore
 
@@ -403,6 +417,7 @@ def pick_subset(
 ) -> list[rdkit.mol]:
     """
     Pick a disparate subset of molecules using Morgan Fingerprints.
+
     https://towardsdatascience.com/a-practical-introduction-to-the-use-of-molecular-fingerprints-in-drug-discovery-7f15021be2b1
 
     :param mols: an iterable of molecules

@@ -1,33 +1,36 @@
 #!/usr/bin/env python3
+"""Plot CSV files."""
+
 import sys
 from itertools import chain
 
 import matplotlib.pyplot as plt
 import numpy as np
 
-files = sys.argv[1:]
-assert len(files) > 0
+if __name__ == "__main__":
+    files = sys.argv[1:]
+    assert len(files) > 0
 
-height = int(np.floor(np.sqrt(len(files))))
-width = int(np.ceil(len(files) / height))
+    height = int(np.floor(np.sqrt(len(files))))
+    width = int(np.ceil(len(files) / height))
 
-fig, axes = plt.subplots(height, width, squeeze=False)
+    fig, axes = plt.subplots(height, width, squeeze=False)
 
-for ax, file in zip(chain.from_iterable(axes), files):
-    vals = np.loadtxt(file)
+    for ax, file in zip(chain.from_iterable(axes), files):
+        vals = np.loadtxt(file)
 
-    if len(vals.shape) == 1:
-        ax.plot(vals)
+        if len(vals.shape) == 1:
+            ax.plot(vals)
 
-    elif len(vals.shape) == 2:
-        xs = vals[:, 0]
-        for i, ys in enumerate(vals.T[1:]):
-            ax.plot(xs, ys, label=f"{i}" if vals.shape[1] > 1 else None)
+        elif len(vals.shape) == 2:
+            xs = vals[:, 0]
+            for i, ys in enumerate(vals.T[1:]):
+                ax.plot(xs, ys, label=f"{i}" if vals.shape[1] > 1 else None)
 
-    else:
-        raise ValueError(f"To many dimensions in {file=}, got: {vals.shape=}")
+        else:
+            raise ValueError(f"To many dimensions in {file=}, got: {vals.shape=}")
 
-    ax.legend()
-    ax.set_title(file)
+        ax.legend()
+        ax.set_title(file)
 
-plt.show()  # type: ignore
+    plt.show()

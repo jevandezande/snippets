@@ -9,7 +9,7 @@ readme = "README.md"
 repository = "https://github.com/jevandezande/snippets"
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = ">=3.11"
 matplotlib = "*"
 networkx = "*"
 numpy = "*"
@@ -32,11 +32,15 @@ line-length = 100
 
 [tool.ruff.lint]
 select = [
+    "D",  # pydocstyle
     "E",  # pycodestyle errors
     "W",  # pycodestyle warnings
     "F",  # pyflakes
     "I",  # isort
 ]
+
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
 
 [tool.mypy]
 files = ["snippets", "tests"]

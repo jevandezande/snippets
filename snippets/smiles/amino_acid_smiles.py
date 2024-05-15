@@ -1,3 +1,5 @@
+"""Manipulating amino acid SMILES."""
+
 from typing import Iterable
 
 amino_acid_sidechains = {
@@ -33,6 +35,11 @@ full_smiles = {letter: f"OC(=O)C({smiles})N" for letter, smiles in amino_acid_si
 
 def aa_to_smiles(aa: str) -> str:
     """
+    Convert amino acid letter to SMILES.
+
+    :param aa: Amino acid letter
+    :return: SMILES representation of the amino acid
+
     >>> aa_to_smiles("A")
     'OC(=O)C(C)N'
     >>> aa_to_smiles("N")
@@ -43,6 +50,11 @@ def aa_to_smiles(aa: str) -> str:
 
 def aas_to_smiles(aas: Iterable[str]) -> str:
     """
+    Convert amino acid sequence to SMILES.
+
+    :param aas: Amino acid letters
+    :return: SMILES representation of the amino acid sequence
+
     >>> aas_to_smiles("CLB")
     'OC(=O)C(CS)NC(=O)C(CC(C)C)NC(=O)C(CC(O)=O)N'
     """

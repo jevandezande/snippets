@@ -1,3 +1,5 @@
+"""Matplotlib settings for LaTeX rendering."""
+
 import matplotlib.pyplot as plt
 
 golden_mean = (5**0.5 - 1) / 2  # Aesthetic ratio
@@ -10,6 +12,15 @@ def latexplots(
     pad: float = 2,
     heightmult: float = 1,
 ) -> None:
+    """
+    Set LaTeX-like plotting settings.
+
+    :param height: height of the plot
+    :param width: width of the plot
+    :param fontsize: font size
+    :param pad: padding
+    :param heightmult: height multiplier
+    """
     fig_width = width / 2.54  # width in inches
     fig_height = fig_width * golden_mean if not height else height / 2.54  # height in inches
 

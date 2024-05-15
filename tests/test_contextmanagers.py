@@ -1,3 +1,5 @@
+"""Tests for the contextmanagers."""
+
 from pathlib import Path
 
 from pytest import raises
@@ -6,6 +8,8 @@ from snippets.contextmanagers import cd
 
 
 def test_cd(tmpdir: Path) -> None:
+    """Test cd."""
+
     def cwd() -> Path:
         return Path(".").cwd()
 
