@@ -15,6 +15,9 @@ def smiles_to_xyz(smiles: str, output: str = "geom.xyz") -> None:
     :param output: file to write the 3D structure to
     """
     mol = MolFromSmiles(smiles)
+    if mol is None:
+        raise ValueError(f"Could not convert SMILES string {smiles} to a molecule")
+
     mol = AddHs(mol)
 
     EmbedMolecule(mol)

@@ -15,6 +15,7 @@ networkx = "*"
 numpy = "*"
 rdkit = "*"
 more_itertools = "*"
+rdkit-stubs = "*"
 
 [tool.poetry.group.dev.dependencies]
 mypy = "*"

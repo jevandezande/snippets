@@ -885,6 +885,20 @@ numpy = "*"
 Pillow = "*"
 
 [[package]]
+name = "rdkit-stubs"
+version = "0.7"
+description = "type stubs for rdkit"
+optional = false
+python-versions = "*"
+files = [
+    {file = "rdkit-stubs-0.7.tar.gz", hash = "sha256:9dd5a91d9c005c9f17b443d1b87ba54e713111eb025c4e6fc8b7353a761bbd32"},
+    {file = "rdkit_stubs-0.7-py3-none-any.whl", hash = "sha256:39f2a9660e7d498fee0d1473252da409c59dc6b5e537b4d58c09dc4213b64ffb"},
+]
+
+[package.dependencies]
+rdkit = "*"
+
+[[package]]
 name = "ruff"
 version = "0.4.4"
 description = "An extremely fast Python linter and code formatter, written in Rust."
@@ -971,4 +985,4 @@ test = ["covdefaults (>=2.3)", "coverage (>=7.2.7)", "coverage-enable-subprocess
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.12"
-content-hash = "81cf63873c13381956f01feeef918462213a22ab4ccf9aee7b280723a5562613"
+content-hash = "fef5bff1191ae5b1bbbc9d8bf0ffdace0a220a20fa96594c505b86126365e065"
